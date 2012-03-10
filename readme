@@ -1,0 +1,19 @@
+The purpose of "fuck" is to provide a programming language to insult people,
+but still allow the reciepient to decipher what you're really trying to say, conditionally even.
+
+var name .. the index on the var table
+data .. simple string that holds data.
+label name .. the index on the label table
+
+fuck (table_init) <var name>
+fucking (table_set) <var name> <data>
+fucked (table_mod) <var name1> <var name2> -- Strings: concat varname1.varname2. Numbers: varname1+(varname2)
+unfucking (table_input) <var name> -- read input from keyboard and store into <var name>
+unfucked (table_output) <var name> -- write <var name> to stdout
+motherfuck (label_define) <label name> -- defines a label. uses PC to determine location
+motherfucking (label_jump) <label name> -- jumps to a given label
+motherfucked (label_branch) <var name> <label name> -- jump to label 1 if variable evaluates true.
+
+Todo:
+  Comments are however you want them: Just don't use the word fuck.
+  fuck you reads first words until it finds a command, and then a operand (unless it's table set or the table_input)

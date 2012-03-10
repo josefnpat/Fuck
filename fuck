@@ -1,0 +1,112 @@
+#!/usr/bin/php
+<?php
+$debug = false;
+if($debug){error_reporting(-1);}
+$commands = array(
+  "fuck" => "table_init",
+  "fucking" => "table_set",
+  "fucked" => "table_mod",
+  "unfucking" => "table_input",
+  "unfucked" => "table_output",
+  "motherfuck" => "label_define",
+  "motherfucking" => "label_jump",
+  "motherfucked" => "label_branch",
+);
+
+$argtable = array(
+  "table_init" => array("var"),
+  "table_set" => array("var","raw"),
+  "table_mod" => array("var","var"),
+  "table_input" => array("var"),
+  "table_output" => array("var"),
+  "label_define" => array("raw"),
+  "label_jump" => array("label"),
+  "label_branch" => array("var","label")
+);
+
+$data = explode(" ",implode(" ",explode("\n",rtrim(file_get_contents($argv[1])))));
+
+$labels = array();
+foreach($data as $pc => $line){
+  if(isset($commands[$line]) and $commands[$line] == "label_define"){
+    $labels[$data[$pc+1]]=$pc;
+  }
+}
+if($debug){
+  print_r($data);
+}
+$pc = 0;
+$vars = array();
+$argstack = array();
+$currentop = null;
+
+while($pc < count($data)){
+  if($currentop){
+    $argstack[] = $data[$pc];
+    if(count($argstack)==count($argtable[$currentop])){
+      $currentop($argstack);
+      $argstack = null;
+      $currentop = null;
+    }
+  } else {
+    if(isset($commands[$data[$pc]])){
+      $currentop = $commands[$data[$pc]];
+    }
+  }
+  $pc++;
+}
+echo "\n";
+
+function table_init($args){
+  global $vars,$pc,$debug;
+  if($debug){echo "table_init ".implode(" ",$args)."\n";}
+  $vars[$args[0]] = "";
+}
+function table_set($args){
+  global $vars,$pc,$debug;
+  if($debug){echo "table_set ".implode(" ",$args)."\n";}
+  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
+  $vars[$args[0]] = $args[1];
+}
+function table_mod($args){
+  global $vars,$pc,$debug;
+  if($debug){echo "table_mod ".implode(" ",$args)."\n";}
+  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
+  if(!isset($vars[$args[1]])){ die("ERROR[$pc]: var args[0] <".$args[1]."> is not initilized.\n"); }
+  if(is_numeric($vars[$args[0]]) and is_numeric($vars[$args[1]])){
+    $vars[$args[0]] += $vars[$args[1]];
+  } else {
+    $vars[$args[0]] .= " ".$vars[$args[1]];
+  }
+}
+function table_input($args){
+  global $vars,$pc,$debug;
+  if($debug){echo "table_input ".implode(" ",$args)."\n";}
+  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
+  $vars[$args[0]] = readline("");
+}
+function table_output($args){
+  global $vars,$pc,$debug;
+  if($debug){echo "table_output ".implode(" ",$args)."\n";}
+  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
+  echo preg_replace('@\\\\n@',"\n",$vars[$args[0]]);
+}
+function label_define($args){
+  global $labels,$pc,$debug;
+  if($debug){echo "label_define ".implode(" ",$args)."\n";}
+}
+function label_jump($args){
+  global $labels,$pc,$debug;
+  if($debug){echo "label_jump ".implode(" ",$args)."\n";}
+  if(!isset($labels[$args[0]])){ die("ERROR[$pc]: label args[0] <".$args[0]."> is not initilized.\n"); }
+  $pc = $labels[$args[0]]+1;
+}
+function label_branch($args){
+  global $labels,$vars,$pc,$debug;
+  if($debug){echo "label_branch ".implode(" ",$args)."\n";}
+  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
+  if(!isset($labels[$args[1]])){ die("ERROR[$pc]: label args[1] <".$args[1]."> is not initilized.\n"); }
+  if($vars[$args[0]]!="0"){
+    $pc = $labels[$args[1]]+1;
+  }
+}
