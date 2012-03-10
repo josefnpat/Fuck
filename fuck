@@ -14,7 +14,7 @@ $commands = array(
 );
 
 $argtable = array(
-  "table_init" => array("var"),
+  "table_init" => array("raw"),
   "table_set" => array("var","raw"),
   "table_mod" => array("var","var"),
   "table_input" => array("var"),
@@ -42,7 +42,20 @@ $currentop = null;
 
 while($pc < count($data)){
   if($currentop){
-    $argstack[] = $data[$pc];
+    $type = $argtable[$currentop][count($argstack)];
+    if($type == "raw"){
+      $argstack[] = $data[$pc];
+    } elseif($type == "var"){
+      if(isset($vars[$data[$pc]])){
+        $argstack[] = $data[$pc];
+        if($debug){echo "Adding var to argstack.\n";}
+      }
+    } elseif($type == "label"){
+      if(isset($labels[$data[$pc]])){
+        $argstack[] = $data[$pc];
+        if($debug){echo "Adding label to argstack.\n";}
+      }
+    }
     if(count($argstack)==count($argtable[$currentop])){
       $currentop($argstack);
       $argstack = null;
