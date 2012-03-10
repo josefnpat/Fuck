@@ -11,14 +11,15 @@
  :8888!    ?8888>    `Y"   'YP     "8888P'  '"888*" 4888" 
  X888!      8888~                    "P'       ""    ""   
  '888       X88f     
-  '%8:     .8*"       P R O G R A M M I N G
-     ^----~"`         L A N G U A G E
+  '%8:     .8*"   THE ESOTERIC INSULT LANGUAGE
+     ^----~"`
 
 The purpose of "Fuck" is to provide a programming language to insult people,
 but still allow the reciepient to decipher what you're really trying to say.
 
 Fuck reads every word until it finds a valid command.
-Once it has a command it will read until it finds a valid argument type (var|label|raw)
+Once it has a command it will read until it finds a valid argument type (var|label|raw).
+
 Types:
   <var>   .. A variable as defined with fuck (table_init)
   <raw>   .. A series of characters without a space
@@ -39,11 +40,11 @@ fucked (table_mod)
   
 unfucking (table_input)
   arguments: <var>
-  description: Store input from keyboard into <var>
+  description: Store input from keyboard into <var>.
   
 unfucked (table_output)
   arguments: <var>
-  description: Print <var> to stdout
+  description: Print <var> to stdout.
   
 motherfuck (label_define)
   arguments: <raw>
@@ -51,7 +52,7 @@ motherfuck (label_define)
   
 motherfucking (label_jump)
   arguments: <label>
-  description: Changes the pc (jump) to <label>
+  description: Changes the pc (jump) to <label>.
   
 motherfucked (label_branch)
   arguments: <var> <label>
