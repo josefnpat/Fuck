@@ -15,7 +15,7 @@
      ^----~"`
 
 The purpose of "Fuck" is to provide a programming language to insult people,
-but still allow the reciepient to decipher what you're really trying to say.
+but still allow the recipient to decipher what you're really trying to say.
 
 Fuck reads every word until it finds a valid command.
 Once it has a command it will read until it finds a valid argument type (var|label|raw).
@@ -28,7 +28,7 @@ Types:
 Commands:
 fuck (table_init)
   arguments: <raw>
-  description: Initilizes <raw> as a variable.
+  description: Initializes <raw> as a variable.
   
 fucking (table_set)
   arguments: <var> <raw>
@@ -36,7 +36,7 @@ fucking (table_set)
   
 fucked (table_mod)
   arguments: <var:1> <var:2>
-  description: If <var:1> and <var:2> are numbers, it adds them, otherwise it concatinateds <var:1> with <var:2>.
+  description: If <var:1> and <var:2> are numbers, it adds them, otherwise it concatenates <var:1> with <var:2>.
   
 unfucking (table_input)
   arguments: <var>
@@ -48,7 +48,7 @@ unfucked (table_output)
   
 motherfuck (label_define)
   arguments: <raw>
-  description: Initilized <raw> as a variable.
+  description: Initializes <raw> as a variable.
   
 motherfucking (label_jump)
   arguments: <label>
