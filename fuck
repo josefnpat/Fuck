@@ -41,18 +41,19 @@ $argstack = array();
 $currentop = null;
 
 while($pc < count($data)){
+  $currentline = strtolower($data[$pc]);
   if($currentop){
     $type = $argtable[$currentop][count($argstack)];
     if($type == "raw"){
-      $argstack[] = $data[$pc];
+      $argstack[] = $currentline;
     } elseif($type == "var"){
-      if(isset($vars[$data[$pc]])){
-        $argstack[] = $data[$pc];
+      if(isset($vars[$currentline])){
+        $argstack[] = $currentline;
         if($debug){echo "Adding var to argstack.\n";}
       }
     } elseif($type == "label"){
-      if(isset($labels[$data[$pc]])){
-        $argstack[] = $data[$pc];
+      if(isset($labels[$currentline])){
+        $argstack[] = $currentline;
         if($debug){echo "Adding label to argstack.\n";}
       }
     }
@@ -62,8 +63,8 @@ while($pc < count($data)){
       $currentop = null;
     }
   } else {
-    if(isset($commands[$data[$pc]])){
-      $currentop = $commands[$data[$pc]];
+    if(isset($commands[$currentline])){
+      $currentop = $commands[$currentline];
     }
   }
   $pc++;
