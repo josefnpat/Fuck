@@ -35,7 +35,7 @@ $data = explode(" ",implode(" ",explode("\n",rtrim(file_get_contents($argv[1])))
 // Run through the data once to check for labels
 $labels = array();
 foreach($data as $pc => $line){
-  // case insensitivity
+  // Labels are case insensitive.
   $currentline = strtolower($line);
   // if the command 
   if(isset($commands[$currentline]) and $commands[$currentline] == "label_define"){
@@ -63,7 +63,7 @@ while($pc < count($data)){
     $type = $argtable[$currentop][count($argstack)];
     if($type == "raw"){
       // If the argument is raw, then put the next thing on the stack.
-      // Raw is not case insensitive.
+      // raw arguments are conditionally case insensitive.
       $argstack[] = $data[$pc];
     } elseif($type == "var"){
       // If the argument is var, then put the next var on the stack.
@@ -105,12 +105,14 @@ function table_init($args){
   if($debug){echo "table_init ".implode(" ",$args)."\n";}
   // Specifically using empty string as oppsed to nill to avoid having to check with array_key_exists().
   // TODO: Change to array_key_exists() for speed.
-  $vars[$args[0]] = "";
+  // Variable names are case insensitive.
+  $vars[strtolower($args[0])] = "";
 }
 function table_set($args){
   global $vars,$pc,$debug;
   if($debug){echo "table_set ".implode(" ",$args)."\n";}
   if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initialized.\n"); }
+  // Raw string data is case sensitive.
   $vars[$args[0]] = $args[1];
 }
 function table_mod($args){
