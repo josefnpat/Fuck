@@ -1,7 +1,13 @@
 #!/usr/bin/php
 <?php
+// Set true for debug
 $debug = false;
-if($debug){error_reporting(-1);}
+if($debug){
+  error_reporting(-1);
+}else{
+  error_reporting(0);
+}
+// Command table to a table system that makes more sese for internal debugging
 $commands = array(
   "fuck" => "table_init",
   "fucking" => "table_set",
@@ -12,7 +18,7 @@ $commands = array(
   "motherfucking" => "label_jump",
   "motherfucked" => "label_branch",
 );
-
+// The argument types of the commands
 $argtable = array(
   "table_init" => array("raw"),
   "table_set" => array("var","raw"),
@@ -23,50 +29,68 @@ $argtable = array(
   "label_jump" => array("label"),
   "label_branch" => array("var","label")
 );
-
+// Read the data, remove trailing newline, remove newlines, and then split by word into an array.
+// TODO: Make this into a preg_match_all().
 $data = explode(" ",implode(" ",explode("\n",rtrim(file_get_contents($argv[1])))));
-
+// Run through the data once to check for labels
 $labels = array();
 foreach($data as $pc => $line){
-  if(isset($commands[$line]) and $commands[$line] == "label_define"){
+  // case insensitivity
+  $currentline = strtolower($line);
+  // if the command 
+  if(isset($commands[$currentline]) and $commands[$currentline] == "label_define"){
+    // Find all of the label_define commands, and put argument in an array.
+    // TODO: Do more debugging to check if by running from this argument, one can use a command op as a arguement.
+    // Check label_jump and label_branch too
     $labels[$data[$pc+1]]=$pc;
   }
 }
-if($debug){
-  print_r($data);
-}
+// Program Counter
 $pc = 0;
+// Array for variables
 $vars = array();
+// Argument stack
 $argstack = array();
+// Current Operation
 $currentop = null;
 
+// While program counter is not at the end
 while($pc < count($data)){
+  // case insensitivity
   $currentline = strtolower($data[$pc]);
-  if($currentop){
+  if($currentop){ // looking for arguments for the current operation.
+    // Determine type from the argument type table.
     $type = $argtable[$currentop][count($argstack)];
     if($type == "raw"){
+      // If the argument is raw, then put the next thing on the stack.
       $argstack[] = $currentline;
     } elseif($type == "var"){
+      // If the argument is var, then put the next var on the stack.
       if(isset($vars[$currentline])){
         $argstack[] = $currentline;
         if($debug){echo "Adding var to argstack.\n";}
       }
     } elseif($type == "label"){
+      // If the argument is label, then put the next label on the stack.
       if(isset($labels[$currentline])){
         $argstack[] = $currentline;
         if($debug){echo "Adding label to argstack.\n";}
       }
     }
+    // If the argument stack is ready for the current operation
     if(count($argstack)==count($argtable[$currentop])){
+      // Execute the operation, and clear the operation and argument stack.
       $currentop($argstack);
-      $argstack = null;
       $currentop = null;
+      $argstack = null;
     }
-  } else {
+  } else { // looking for a current operation.
+    // if a valid command
     if(isset($commands[$currentline])){
       $currentop = $commands[$currentline];
     }
   }
+  // increment the program counter.
   $pc++;
 }
 echo "\n";
@@ -74,6 +98,8 @@ echo "\n";
 function table_init($args){
   global $vars,$pc,$debug;
   if($debug){echo "table_init ".implode(" ",$args)."\n";}
+  // Specifically using empty string as oppsed to nill to avoid having to check with array_key_exists().
+  // TODO: Change to array_key_exists() for speed.
   $vars[$args[0]] = "";
 }
 function table_set($args){
@@ -87,9 +113,13 @@ function table_mod($args){
   if($debug){echo "table_mod ".implode(" ",$args)."\n";}
   if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
   if(!isset($vars[$args[1]])){ die("ERROR[$pc]: var args[0] <".$args[1]."> is not initilized.\n"); }
+  // TODO: Make is_numeric more portiable if the language chages to something lower level, like C.
+  // If both arguments are numbers:
   if(is_numeric($vars[$args[0]]) and is_numeric($vars[$args[1]])){
+    // Treat them as numbers.
     $vars[$args[0]] += $vars[$args[1]];
   } else {
+    // Treat them as strings.
     $vars[$args[0]] .= " ".$vars[$args[1]];
   }
 }
@@ -97,22 +127,28 @@ function table_input($args){
   global $vars,$pc,$debug;
   if($debug){echo "table_input ".implode(" ",$args)."\n";}
   if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
+  // using readline over fgets because this script is very linux like.
+  // TODO: change over to fgets for portablilty, or, implement the readline_history features.
   $vars[$args[0]] = readline("");
 }
 function table_output($args){
   global $vars,$pc,$debug;
   if($debug){echo "table_output ".implode(" ",$args)."\n";}
   if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
+  // The system took in \n as actual data, so it needs to be translated to a newline.
   echo preg_replace('@\\\\n@',"\n",$vars[$args[0]]);
 }
 function label_define($args){
   global $labels,$pc,$debug;
   if($debug){echo "label_define ".implode(" ",$args)."\n";}
+  // This function doesn't actually do anything, but it is importiant to render it so that the system doesn't
+  // treat it or it's argument as a raw arguments.
 }
 function label_jump($args){
   global $labels,$pc,$debug;
   if($debug){echo "label_jump ".implode(" ",$args)."\n";}
   if(!isset($labels[$args[0]])){ die("ERROR[$pc]: label args[0] <".$args[0]."> is not initilized.\n"); }
+  // Change the program counter to the defined label's argument.
   $pc = $labels[$args[0]]+1;
 }
 function label_branch($args){
@@ -120,6 +156,7 @@ function label_branch($args){
   if($debug){echo "label_branch ".implode(" ",$args)."\n";}
   if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
   if(!isset($labels[$args[1]])){ die("ERROR[$pc]: label args[1] <".$args[1]."> is not initilized.\n"); }
+  // Change the program counter to the defined label if variable doesn't equal zero.
   if($vars[$args[0]]!="0"){
     $pc = $labels[$args[1]]+1;
   }
