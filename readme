@@ -13,12 +13,18 @@
  '888       X88f     
   '%8:     .8*"   THE ESOTERIC INSULT LANGUAGE
      ^----~"`
+Description:
+  The purpose of "Fuck" (capital F) is to provide a programming language to insult 
+  people, but still allow the recipient to decipher what you're really trying to say.
 
-The purpose of "Fuck" is to provide a programming language to insult people,
-but still allow the recipient to decipher what you're really trying to say.
+Dependencies:
+  This is a linux script pointing to `/usr/bin/php`.
+  This script has been tested with php5-cli.
+  For aptitude users please use: `sudo apt-get install php5 php5-cli`
 
-Fuck reads every word until it finds a valid command.
-Once it has a command it will read until it finds a valid argument type (var|label|raw).
+Operation:
+  Fuck reads every word until it finds a valid command.
+  Once it has a command it will read until it finds a valid argument type (var|label|raw).
 
 Types:
   <var>   .. A variable as defined with fuck (table_init)
@@ -26,34 +32,34 @@ Types:
   <label> .. A label defined with motherfuck (label_define)
 
 Commands:
-fuck (table_init)
-  arguments: <raw>
-  description: Initializes <raw> as a variable.
-  
-fucking (table_set)
-  arguments: <var> <raw>
-  description: Sets <raw>'s value to <var>.
-  
-fucked (table_mod)
-  arguments: <var:1> <var:2>
-  description: If <var:1> and <var:2> are numbers, it adds them, otherwise it concatenates <var:1> with <var:2>.
-  
-unfucking (table_input)
-  arguments: <var>
-  description: Store input from keyboard into <var>.
-  
-unfucked (table_output)
-  arguments: <var>
-  description: Print <var> to stdout.
-  
-motherfuck (label_define)
-  arguments: <raw>
-  description: Initializes <raw> as a variable.
-  
-motherfucking (label_jump)
-  arguments: <label>
-  description: Changes the pc (jump) to <label>.
-  
-motherfucked (label_branch)
-  arguments: <var> <label>
-  description: Changes the pc (jump) to <label> variable evaluates true.
+  fuck (table_init)
+    arguments: <raw>
+    description: Initializes <raw> as a variable.
+    
+  fucking (table_set)
+    arguments: <var> <raw>
+    description: Sets <raw>'s value to <var>.
+    
+  fucked (table_mod)
+    arguments: <var:1> <var:2>
+    description: If <var:1> and <var:2> are numbers, it adds them, otherwise it concatenates <var:1> with <var:2>.
+    
+  unfucking (table_input)
+    arguments: <var>
+    description: Store input from keyboard into <var>.
+    
+  unfucked (table_output)
+    arguments: <var>
+    description: Print <var> to stdout.
+    
+  motherfuck (label_define)
+    arguments: <raw>
+    description: Initializes <raw> as a variable.
+    
+  motherfucking (label_jump)
+    arguments: <label>
+    description: Changes the pc (jump) to <label>.
+    
+  motherfucked (label_branch)
+    arguments: <var> <label>
+    description: Changes the pc (jump) to <label> variable evaluates true.
