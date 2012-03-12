@@ -7,7 +7,7 @@ if($debug){
 }else{
   error_reporting(0);
 }
-// Command table to a table system that makes more sese for internal debugging
+// Command table to a table system that makes more sense for internal debugging
 $commands = array(
   "fuck" => "table_init",
   "fucking" => "table_set",
@@ -40,7 +40,7 @@ foreach($data as $pc => $line){
   // if the command 
   if(isset($commands[$currentline]) and $commands[$currentline] == "label_define"){
     // Find all of the label_define commands, and put argument in an array.
-    // TODO: Do more debugging to check if by running from this argument, one can use a command op as a arguement.
+    // TODO: Do more debugging to check if by running from this argument, one can use a command op as a argument.
     // Check label_jump and label_branch too
     $labels[$data[$pc+1]]=$pc;
   }
@@ -93,8 +93,12 @@ while($pc < count($data)){
   // increment the program counter.
   $pc++;
 }
+// echo out newline at end of file
 echo "\n";
 
+// These functions are thoroughly described in the readme file. All functions only take in arguments from the
+// argument stack, and do not return anything, as they access everything globally. Usually, this would be a
+// bad idea, but the language is so small, it really does not matter and lowers the amount of overhead being used.
 function table_init($args){
   global $vars,$pc,$debug;
   if($debug){echo "table_init ".implode(" ",$args)."\n";}
@@ -105,15 +109,15 @@ function table_init($args){
 function table_set($args){
   global $vars,$pc,$debug;
   if($debug){echo "table_set ".implode(" ",$args)."\n";}
-  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
+  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initialized.\n"); }
   $vars[$args[0]] = $args[1];
 }
 function table_mod($args){
   global $vars,$pc,$debug;
   if($debug){echo "table_mod ".implode(" ",$args)."\n";}
-  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
-  if(!isset($vars[$args[1]])){ die("ERROR[$pc]: var args[0] <".$args[1]."> is not initilized.\n"); }
-  // TODO: Make is_numeric more portiable if the language chages to something lower level, like C.
+  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initialized.\n"); }
+  if(!isset($vars[$args[1]])){ die("ERROR[$pc]: var args[0] <".$args[1]."> is not initialized.\n"); }
+  // TODO: Make is_numeric more portable if the language changes to something lower level, like C.
   // If both arguments are numbers:
   if(is_numeric($vars[$args[0]]) and is_numeric($vars[$args[1]])){
     // Treat them as numbers.
@@ -126,37 +130,37 @@ function table_mod($args){
 function table_input($args){
   global $vars,$pc,$debug;
   if($debug){echo "table_input ".implode(" ",$args)."\n";}
-  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
+  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initialized.\n"); }
   // using readline over fgets because this script is very linux like.
-  // TODO: change over to fgets for portablilty, or, implement the readline_history features.
+  // TODO: change over to fgets for portability, or, implement the readline_history features.
   $vars[$args[0]] = readline("");
 }
 function table_output($args){
   global $vars,$pc,$debug;
   if($debug){echo "table_output ".implode(" ",$args)."\n";}
-  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
+  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initialized.\n"); }
   // The system took in \n as actual data, so it needs to be translated to a newline.
   echo preg_replace('@\\\\n@',"\n",$vars[$args[0]]);
 }
 function label_define($args){
   global $labels,$pc,$debug;
   if($debug){echo "label_define ".implode(" ",$args)."\n";}
-  // This function doesn't actually do anything, but it is importiant to render it so that the system doesn't
-  // treat it or it's argument as a raw arguments.
+  // This function does not actually do anything, but it is important to render it so that the system does
+  // not treat it or it's argument as a raw arguments.
 }
 function label_jump($args){
   global $labels,$pc,$debug;
   if($debug){echo "label_jump ".implode(" ",$args)."\n";}
-  if(!isset($labels[$args[0]])){ die("ERROR[$pc]: label args[0] <".$args[0]."> is not initilized.\n"); }
+  if(!isset($labels[$args[0]])){ die("ERROR[$pc]: label args[0] <".$args[0]."> is not initialized.\n"); }
   // Change the program counter to the defined label's argument.
   $pc = $labels[$args[0]]+1;
 }
 function label_branch($args){
   global $labels,$vars,$pc,$debug;
   if($debug){echo "label_branch ".implode(" ",$args)."\n";}
-  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initilized.\n"); }
-  if(!isset($labels[$args[1]])){ die("ERROR[$pc]: label args[1] <".$args[1]."> is not initilized.\n"); }
-  // Change the program counter to the defined label if variable doesn't equal zero.
+  if(!isset($vars[$args[0]])){ die("ERROR[$pc]: var args[0] <".$args[0]."> is not initialized.\n"); }
+  if(!isset($labels[$args[1]])){ die("ERROR[$pc]: label args[1] <".$args[1]."> is not initialized.\n"); }
+  // Change the program counter to the defined label if variable does not equal zero.
   if($vars[$args[0]]!="0"){
     $pc = $labels[$args[1]]+1;
   }
