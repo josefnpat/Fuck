@@ -63,7 +63,8 @@ while($pc < count($data)){
     $type = $argtable[$currentop][count($argstack)];
     if($type == "raw"){
       // If the argument is raw, then put the next thing on the stack.
-      $argstack[] = $currentline;
+      // Raw is not case insensitive.
+      $argstack[] = $data[$pc];
     } elseif($type == "var"){
       // If the argument is var, then put the next var on the stack.
       if(isset($vars[$currentline])){
