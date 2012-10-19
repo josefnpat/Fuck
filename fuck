@@ -32,6 +32,9 @@ $argtable = array(
 // Read the data, remove trailing newline, remove newlines, and then split by word into an array.
 // TODO: Make this into a preg_match_all().
 $data = explode(" ",implode(" ",explode("\n",rtrim(file_get_contents($argv[1])))));
+if(count($data)==1 and $data[0]==""){
+  die("fuck: fatal error: no input files.\nrun terminated.\n");
+}
 // Run through the data once to check for labels
 $labels = array();
 foreach($data as $pc => $line){
