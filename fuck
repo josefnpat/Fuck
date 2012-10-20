@@ -1,7 +1,8 @@
 #!/usr/bin/php
 <?php
-$opts = yago("-d,--debug,-h,--help");
-// Set true for debug
+$opts = yago("-d,--debug,-h,--help,-c,--clean");
+
+// Check for debug flag.
 if(array_key_exists("-d",$opts['flags']) or
   array_key_exists("--debug",$opts['flags'])){
   $debug = true;
@@ -11,10 +12,19 @@ if(array_key_exists("-d",$opts['flags']) or
   error_reporting(0);
 }
 
+// Check for help flag.
 if(array_key_exists("-h",$opts['flags']) or
   array_key_exists("--help",$opts['flags'])){
   usage();
   die();
+}
+
+// Check for clean flag.
+if(array_key_exists("-c",$opts['flags']) or
+  array_key_exists("--clean",$opts['flags'])){
+  $clean = TRUE;
+} else {
+  $clean = FALSE;
 }
 
 $input = $opts['operands'][1];
@@ -30,6 +40,16 @@ $commands = array(
   "motherfucking" => "label_jump",
   "motherfucked" => "label_branch",
 );
+
+// Convert the table to the clean definition.
+if($clean){
+  $clean_commands = array();
+  foreach($commands as $command){
+    $clean_commands[$command] = $command;
+  }
+  $commands = $clean_commands;
+}
+
 // The argument types of the commands
 $argtable = array(
   "table_init" => array("raw"),
@@ -198,7 +218,9 @@ function usage(){
 ?>
  Usage: fuck [options] input
  Options:
-   -d|--debug               Exit with highest error code from a phase
+   -d|--debug               Enable debug mode to show how the code is being
+                            rendered.
+   -c|--clean               Run the code using the clean reserved words.
    -h|--help                Display this information
 <?php
 }
