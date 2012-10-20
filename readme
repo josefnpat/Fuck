@@ -31,7 +31,13 @@ Operation:
 
 Usage:
   fuck [-d|--debug] <input>
-
+ Usage: fuck [options] input
+  Options:
+     -d|--debug               Enable debug mode to show how the code is being
+                              rendered.
+     -c|--clean               Run the code using the clean reserved words.
+     -h|--help                Display this information
+                                       
 Types:
   <var>   .. A variable as defined with fuck (table_init)
   <raw>   .. A series of characters without a space
