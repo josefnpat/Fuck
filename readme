@@ -15,8 +15,9 @@
      ^----~"`
 
 Description:
-  The purpose of "Fuck" (capital F) is to provide a programming language to insult 
-  people, but still allow the recipient to decipher what you're really trying to say.
+  The purpose of "Fuck" (capital F) is to provide a programming language to
+  insult people, but still allow the recipient to decipher what you're really
+  trying to say.
 
 Dependencies:
   This is a linux script pointing to `/usr/bin/php`.
@@ -25,7 +26,11 @@ Dependencies:
 
 Operation:
   Fuck reads every word until it finds a valid command.
-  Once it has a command it will read until it finds a valid argument type (var|label|raw).
+  Once it has a command it will read until it finds a valid argument type
+  (var|label|raw).
+
+Usage:
+  fuck [-d|--debug] <input>
 
 Types:
   <var>   .. A variable as defined with fuck (table_init)
@@ -43,7 +48,8 @@ Commands:
     
   fucked (table_mod)
     arguments: <var:1> <var:2>
-    description: If <var:1> and <var:2> are numbers, it adds them, otherwise it concatenates <var:1> with <var:2>.
+    description: If <var:1> and <var:2> are numbers, it adds them, otherwise it
+    concatenates <var:1> with <var:2>.
     
   unfucking (table_input)
     arguments: <var>
