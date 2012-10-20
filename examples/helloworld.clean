@@ -1,0 +1,6 @@
+table_init output
+table_init temp
+table_set output Hello
+table_set temp World!
+table_mod output temp
+table_output output
