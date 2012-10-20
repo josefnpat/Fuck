@@ -30,8 +30,7 @@ Operation:
   (var|label|raw).
 
 Usage:
-  fuck [-d|--debug] <input>
- Usage: fuck [options] input
+  fuck [options] input
   Options:
      -d|--debug               Enable debug mode to show how the code is being
                               rendered.
