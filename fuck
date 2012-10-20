@@ -1,12 +1,18 @@
 #!/usr/bin/php
 <?php
+$opts = yago("-d,--debug");
 // Set true for debug
-$debug = false;
-if($debug){
+if(array_key_exists("-d",$opts['flags']) or
+  array_key_exists("--debug",$opts['flags'])){
+  $debug = true;
   error_reporting(-1);
 }else{
+  $debug = false;
   error_reporting(0);
 }
+
+$input = $opts['operands'][1];
+
 // Command table to a table system that makes more sense for internal debugging
 $commands = array(
   "fuck" => "table_init",
@@ -29,12 +35,22 @@ $argtable = array(
   "label_jump" => array("label"),
   "label_branch" => array("var","label")
 );
-// Read the data, remove trailing newline, remove newlines, and then split by word into an array.
-// TODO: Make this into a preg_match_all().
-$data = explode(" ",implode(" ",explode("\n",rtrim(file_get_contents($argv[1])))));
-if(count($data)==1 and $data[0]==""){
-  die("fuck: fatal error: no input files.\nrun terminated.\n");
+
+if(is_file($input)){
+  // Read the data, remove trailing newline, remove newlines, and then split by
+  // word into an array.
+  // TODO: Make this into a preg_match_all().
+  $data = explode(" ",
+    implode(" ",
+      explode("\n",
+        rtrim(file_get_contents($input))
+      )
+    )
+  );  
+} else {
+  die("fuck: fatal error: no input files.\nrun terminated.\n");  
 }
+
 // Run through the data once to check for labels
 $labels = array();
 foreach($data as $pc => $line){
@@ -170,4 +186,53 @@ function label_branch($args){
   if($vars[$args[0]]!="0"){
     $pc = $labels[$args[1]]+1;
   }
+}
+
+/**
+ * Yet Another Get Options
+ *
+ * This function will provide a simple alternative to *nix's getopt that has
+ * some extended features found in GNU's getopts.
+ *
+ * @author josefnpat <seppi@josefnpat.com>
+ *
+ * @param $raw_flags
+ *   This string represents the flags that should be parsed by this function.
+ *   The flags that this function will look for is seperated by commas. E.g.;
+ *   "-d,--debug,-n!,--name!"
+ *   If flag has an exclamation mark (`!`) at the end, the function will
+ *   assume that the flag is expecting an argument.
+ * @param $argv|NULL
+ *   This is the argument vector provided when a script is invoked by php-cli.
+ *   By default, it will use the global `$argv`, but can be overridden by
+ *   passing an array of arguments.
+ *
+ * @return
+ *   The returned data will consist of a nexted associative array containing:
+ *   - operands: an array of arguments that are not flags or flag operands
+ *   - flags: an associtave array of flags that were found. If the flag is;
+ *     - expecting an argument: the value will be assigned.
+ *     - not expecting an arguement: the value will be null.
+ */
+
+
+function yago($raw_flags,$argv=NULL){
+  if($argv === NULL){
+    global $argv;
+  }
+  $stack = array();
+  $stack['operands'] = array();
+  $stack['flags'] = array();
+  $search_flags = explode(",",$raw_flags);
+  while(!empty($argv)){
+    $arg = array_shift($argv);
+    if(in_array($arg,$search_flags)){
+      $stack['flags'][$arg] = NULL;
+    } elseif(in_array("$arg!",$search_flags)){
+      $stack['flags'][$arg] = array_shift($argv);
+    } elseif(substr($arg,0,1)!="-") {
+      $stack['operands'][] = $arg;
+    }
+  }
+  return $stack;
 }
