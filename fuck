@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-$opts = yago("-d,--debug");
+$opts = yago("-d,--debug,-h,--help");
 // Set true for debug
 if(array_key_exists("-d",$opts['flags']) or
   array_key_exists("--debug",$opts['flags'])){
@@ -9,6 +9,12 @@ if(array_key_exists("-d",$opts['flags']) or
 }else{
   $debug = false;
   error_reporting(0);
+}
+
+if(array_key_exists("-h",$opts['flags']) or
+  array_key_exists("--help",$opts['flags'])){
+  usage();
+  die();
 }
 
 $input = $opts['operands'][1];
@@ -46,9 +52,9 @@ if(is_file($input)){
         rtrim(file_get_contents($input))
       )
     )
-  );  
+  );
 } else {
-  die("fuck: fatal error: no input files.\nrun terminated.\n");  
+  die("fuck: fatal error: no input files.\nrun terminated.\n");
 }
 
 // Run through the data once to check for labels
@@ -56,7 +62,7 @@ $labels = array();
 foreach($data as $pc => $line){
   // Labels are case insensitive.
   $currentline = strtolower($line);
-  // if the command 
+  // if the command
   if(isset($commands[$currentline]) and $commands[$currentline] == "label_define"){
     // Find all of the label_define commands, and put argument in an array.
     // TODO: Do more debugging to check if by running from this argument, one can use a command op as a argument.
@@ -187,6 +193,16 @@ function label_branch($args){
     $pc = $labels[$args[1]]+1;
   }
 }
+
+function usage(){
+?>
+ Usage: fuck [options] input
+ Options:
+   -d|--debug               Exit with highest error code from a phase
+   -h|--help                Display this information
+<?php
+}
+
 
 /**
  * Yet Another Get Options
