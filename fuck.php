@@ -174,7 +174,7 @@ function table_mod($args){
     die("ERROR[$pc]: var args[0] <".$args[0]."> is not initialized.\n");
   }
   if(!isset($vars[$args[1]])){
-    die("ERROR[$pc]: var args[0] <".$args[1]."> is not initialized.\n");
+    die("ERROR[$pc]: var args[1] <".$args[1]."> is not initialized.\n");
   }
   // TODO: Make is_numeric more portable if the language changes to something
   // lower level, like C.
