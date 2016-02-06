@@ -115,6 +115,7 @@ for i,v in pairs(arg) do
       end
     else
       input = v
+      break
     end
   end
 end
