@@ -36,7 +36,7 @@ Usage:
                               rendered.
      -c|--clean               Run the code using the clean reserved words.
      -h|--help                Display this information
-                                       
+
 Types:
   <var>   .. A variable as defined with fuck (table_init)
   <raw>   .. A series of characters without a space
@@ -46,32 +46,32 @@ Commands:
   fuck (table_init)
     arguments: <raw>
     description: Initializes <raw> as a variable.
-    
+
   fucking (table_set)
     arguments: <var> <raw>
     description: Sets <raw>'s value to <var>.
-    
+
   fucked (table_mod)
     arguments: <var:1> <var:2>
     description: If <var:1> and <var:2> are numbers, it adds them, otherwise it
     concatenates <var:1> with <var:2>.
-    
+
   unfucking (table_input)
     arguments: <var>
     description: Store input from keyboard into <var>.
-    
+
   unfucked (table_output)
     arguments: <var>
     description: Print <var> to stdout.
-    
+
   motherfuck (label_define)
     arguments: <raw>
     description: Initializes <raw> as a variable.
-    
+
   motherfucking (label_jump)
     arguments: <label>
     description: Changes the pc (jump) to <label>.
-    
+
   motherfucked (label_branch)
     arguments: <var> <label>
     description: Changes the pc (jump) to <label> variable evaluates true.
