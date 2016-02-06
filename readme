@@ -20,6 +20,16 @@ Description:
   trying to say.
 
 Dependencies:
+  This language has two implementations.
+
+  Lua:
+
+  This is a linux script pointing to `/usr/bin/lua`.
+  This script has been tested with lua5.1.
+  For aptitude users please use: `sudo apt-get install lua5.1`
+
+  PHP:
+
   This is a linux script pointing to `/usr/bin/php`.
   This script has been tested with php5-cli.
   For aptitude users please use: `sudo apt-get install php5 php5-cli`
