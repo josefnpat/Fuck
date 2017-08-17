@@ -84,4 +84,4 @@ Commands:
 
   motherfucked (label_branch)
     arguments: <var> <label>
-    description: Changes the pc (jump) to <label> variable evaluates true.
+    description: Changes the pc (jump) to <label> if the <var> variable evaluates to true.
